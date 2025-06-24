@@ -28,6 +28,6 @@
           <version>3.3.1</version>
        </plugin>
    </plugins>
-    <finalName>sysfoo</finalName>
+    <finalName>devsecops</finalName>
   </build>
 </project>
