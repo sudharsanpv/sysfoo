@@ -15,8 +15,10 @@ jobs:
         run:  mvn clean
       - name: MVN package
         run: mvn package
-      - name: Run ls command
-        run: ls -lrt
+      - name: List WAR file in target directory
+        run: |
+          echo "Listing WAR files in target/"
+          ls -lh target/*.war
      
             
 
