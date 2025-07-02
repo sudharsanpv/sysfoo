@@ -1,4 +1,4 @@
-name: Build docker image and push to registry # workflow for building and pushing Docker images
+name: Build docker image and push to registry # workflow for building and pushing Docker image
 on:
   push:
     branches:
