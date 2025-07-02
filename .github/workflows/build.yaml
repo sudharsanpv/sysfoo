@@ -25,6 +25,7 @@ jobs:
           context: .
           file: ./Dockerfile
           push: false
+          load: true  # ➡️ adds the image to local Docker daemon
           tags: ${{ secrets.DOCKER_USERNAME }}/sysfoo_cart:v2
 
       - name: Install Trivy
