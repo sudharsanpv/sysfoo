@@ -19,10 +19,44 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_TOKEN }}
 
-      - name: Build and push Docker image
-        uses: docker/build-push-action@v2
+      - name: Build Docker image (no push)
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile
+          push: false
+          tags: ${{ secrets.DOCKER_USERNAME }}/sysfoo_cart:v2
+
+      - name: Install Trivy
+        uses: aquasecurity/trivy-action@v0.16.1
+        with:
+          scan-type: 'image'
+          image-ref: ${{ secrets.DOCKER_USERNAME }}/sysfoo_cart:v2
+          format: 'table'
+          output: trivy-report.txt
+          exit-code: 0
+          ignore-unfixed: true
+
+      - name: Upload Trivy scan report
+        uses: actions/upload-artifact@v4
+        with:
+          name: trivy-scan-report
+          path: trivy-report.txt
+
+      - name: Push Docker image to Docker Hub
+        uses: docker/build-push-action@v5
         with:
           context: .
           file: ./Dockerfile
           push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/sysfoo_cart:v1
+          tags: ${{ secrets.DOCKER_USERNAME }}/sysfoo_cart:v2
+
+      - name: Save Docker image as tar
+        run: |
+          docker save -o sysfoo_cart.tar ${{ secrets.DOCKER_USERNAME }}/sysfoo_cart:v2
+
+      - name: Upload Docker image tar as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: sysfoo_cart-image
+          path: sysfoo_cart.tar
